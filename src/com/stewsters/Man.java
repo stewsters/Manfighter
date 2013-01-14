@@ -7,7 +7,8 @@ import processing.core.PVector;
 
 public class Man
 {
-	PApplet parent;
+    static int mancounter = 0;
+
 	Color c;
 	public PVector pos;
 	int m_id;
@@ -15,26 +16,26 @@ public class Man
 	int life = 10;
 	int speed = 1;
 
-	int girth = 5;
-	int range = 8;
+	int girth = 8;
+	int range = 16;
 	Order order;
-	static int mancounter = 0;
 
-	Man(PApplet tempParent, Color tempC, PVector tempPos, int tempAllegiance)
+
+	Man(Color color, PVector pos, int tempAllegiance)
 	{
 		m_id = mancounter++;
-		parent = tempParent;
-		c = tempC;
-		pos = tempPos;
+
+		this.c = color;
+		this.pos = pos;
 		allegiance = tempAllegiance;
 	}
 
-	void display()
+	void display(PApplet context)
 	{
-		parent.stroke(0);
-		parent.fill(c.getRed(), c.getGreen(), c.getBlue());
-		parent.ellipseMode(PApplet.CENTER);
-		parent.ellipse(pos.x, pos.y, girth, girth);
+        context.stroke(0);
+        context.fill(c.getRed(), c.getGreen(), c.getBlue());
+        context.ellipseMode(PApplet.CENTER);
+        context.ellipse(pos.x, pos.y, girth, girth);
 	}
 
 	void act()

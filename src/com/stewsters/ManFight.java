@@ -21,7 +21,6 @@ public class ManFight extends PApplet
 		this.setSize(World.x, World.y);
 		this.scale(10);
 
-		
 		// smooth();
 		World.dudes = Collections.synchronizedList(new ArrayList<Man>());
 
@@ -40,7 +39,7 @@ public class ManFight extends PApplet
 				c = new Color(0, 0, 255);
 				starting = new PVector(r.nextInt(World.x/4)+(3*World.x/4), r.nextInt(World.y));
 			}
-			World.dudes.add(i, new Man(this, c, starting, i % 2));
+			World.dudes.add(i, new Man( c, starting, i % 2));
 
 		}
 	}
@@ -55,7 +54,7 @@ public class ManFight extends PApplet
 		}
 		for (Man m : World.dudes)
 		{
-			m.display();
+			m.display(this);
 		}
 
 	}
