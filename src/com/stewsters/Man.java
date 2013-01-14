@@ -11,14 +11,14 @@ public class Man
 
 	Color c;
 	public PVector pos;
-	int m_id;
-	int allegiance;
-	int life = 10;
-	int speed = 1;
+	public int m_id;
+    public int allegiance;
+    public int life = 10;
+    public int speed = 1;
 
-	int girth = 8;
-	int range = 16;
-	Order order;
+    public int girth = 8;
+    public int range = 16;
+	public Order order;
 
 
 	Man(Color color, PVector pos, int tempAllegiance)
