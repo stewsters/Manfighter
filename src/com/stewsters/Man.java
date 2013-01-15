@@ -1,7 +1,5 @@
 package com.stewsters;
 
-import java.awt.Color;
-
 import com.stewsters.ai.Faction;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -29,6 +27,9 @@ public class Man {
     }
 
     void display(PApplet context) {
+        if(life < 1){
+            context.image(World.casualty, pos.x - girth, pos.y - girth);
+        }else
         context.image(faction.image, pos.x - girth, pos.y - girth);
     }
 

@@ -21,6 +21,8 @@ public class ManFight extends PApplet {
 
         Faction.RED.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/red_fighter.png");
         Faction.BLUE.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/blue_fighter.png");
+        Faction.YELLOW.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/yellow_fighter.png");
+        World.casualty = loadImage("/home/bloodred/privatecode/Manfighter/assets/casualty.png");
 
         // smooth();
         World.dudes = new LinkedHashMap<Integer, Man>();
@@ -30,7 +32,7 @@ public class ManFight extends PApplet {
             Faction faction;
             PVector starting;
             if (i % 2 == 0) {
-                faction = Faction.RED;
+                faction = Faction.YELLOW;
                 starting = new PVector(r.nextInt(World.x / 4), r.nextInt(World.y));
             } else {
                 faction = Faction.BLUE;

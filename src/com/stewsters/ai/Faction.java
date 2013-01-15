@@ -4,7 +4,8 @@ import processing.core.PImage;
 
 public enum Faction {
     RED,
-    BLUE;
+    BLUE,
+    YELLOW;
 
     public PImage image;
 
