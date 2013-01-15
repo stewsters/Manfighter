@@ -1,6 +1,5 @@
 package com.stewsters.ai;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.stewsters.Man;
@@ -21,7 +20,7 @@ public class Group
 	public Group(List<Man> guys)
 	{
         this.guys = guys;
-        leaderId = guys.get(0).m_id;
+        leaderId = guys.get(0).id;
 	}
 	
 	/*
