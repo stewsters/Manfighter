@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Random;
 
 import com.stewsters.ai.Faction;
+import com.stewsters.ai.Group;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -19,26 +20,34 @@ public class ManFight extends PApplet {
         this.setSize(World.x, World.y);
         this.scale(10);
 
-        Faction.RED.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/red_fighter.png");
-        Faction.BLUE.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/blue_fighter.png");
-        Faction.YELLOW.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/yellow_fighter.png");
-        World.casualty = loadImage("/home/bloodred/privatecode/Manfighter/assets/casualty.png");
+        Faction.RED.image = loadImage("/home/bloodred/code/Manfighter/assets/red_fighter.png");
+        Faction.BLUE.image = loadImage("/home/bloodred/code/Manfighter/assets/blue_fighter.png");
+        Faction.YELLOW.image = loadImage("/home/bloodred/code/Manfighter/assets/yellow_fighter.png");
+        World.casualty = loadImage("/home/bloodred/code/Manfighter/assets/casualty.png");
 
         // smooth();
         World.dudes = new LinkedHashMap<Integer, Man>();
 
         Random r = new Random();
-        for (int i = 0; i < 1000; i++) {
+
+        Group blueGroup = new Group();
+        Group yellowGroup = new Group();
+
+        for (int i = 0; i < 2000; i++) {
             Faction faction;
             PVector starting;
+            Man newMan;
             if (i % 2 == 0) {
-                faction = Faction.YELLOW;
                 starting = new PVector(r.nextInt(World.x / 4), r.nextInt(World.y));
+                newMan = new Man(Faction.YELLOW, starting);
+
+                yellowGroup.join(newMan);
             } else {
-                faction = Faction.BLUE;
                 starting = new PVector(r.nextInt(World.x / 4) + (3 * World.x / 4), r.nextInt(World.y));
+                newMan = new Man(Faction.BLUE, starting);
+                blueGroup.join(newMan);
             }
-            Man newMan = new Man(faction, starting);
+
             World.dudes.put(newMan.id, newMan);
 
         }

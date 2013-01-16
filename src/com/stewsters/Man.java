@@ -1,6 +1,7 @@
 package com.stewsters;
 
 import com.stewsters.ai.Faction;
+import com.stewsters.ai.Group;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -16,7 +17,7 @@ public class Man {
 
     public int girth = 8;
     public int range = 16;
-    public Order order;
+    public Group group;
 
 
     Man(Faction faction, PVector pos) {
@@ -27,10 +28,10 @@ public class Man {
     }
 
     void display(PApplet context) {
-        if(life < 1){
+        if (life < 1) {
             context.image(World.casualty, pos.x - girth, pos.y - girth);
-        }else
-        context.image(faction.image, pos.x - girth, pos.y - girth);
+        } else
+            context.image(faction.image, pos.x - girth, pos.y - girth);
     }
 
     void act() {
@@ -62,23 +63,41 @@ public class Man {
 
             }
         }
-        // move toward him. If the distance is less than 1, attack
+        Man groupLeader = null;
+        if (group != null) {
+            groupLeader = group.getLeader();
+        }
+
 
         if (closest_friend != null) {
             if (min_friend_distance < girth) {
-                flee(closest_friend);
+                flee(closest_friend,1f);
             }
         }
 
+        // move toward him. If the distance is less than 1, attack
         if (closest_opponent != null) {
-            if (min_oppenent_distance < girth || (min_oppenent_distance < 100 && life < 5)) {
+            if (min_oppenent_distance < girth) {
                 //back off of them
-                flee(closest_opponent);
+                flee(closest_opponent,1f);
+            } else if (life < 5) {
+                if (min_oppenent_distance < 10) {
+                    flee(closest_opponent,0.6f);
+                } else {
+                    advance(groupLeader,0.6f);
+                }
             } else if (min_oppenent_distance < range) {
                 // attack
                 closest_opponent.life -= 1;
             } else {
-                advance(closest_opponent);
+
+                //we are the leader, advance.
+                if (groupLeader == this) {
+                    advance(closest_opponent,.5f);
+                } else {
+                    //move toward the leader
+                    advance(groupLeader,1f);
+                }
             }
         }
 
@@ -94,17 +113,17 @@ public class Man {
             pos.y += World.y;
     }
 
-    private void advance(Man m) {
+    private void advance(Man m,float percent) {
         PVector travel = PVector.sub(m.pos, pos);
         travel.normalize();
-        travel.mult(speed);
+        travel.mult(percent * speed);
         pos.add(travel);
     }
 
-    private void flee(Man m) {
+    private void flee(Man m,float percent) {
         PVector travel = PVector.sub(m.pos, pos);
         travel.normalize();
-        travel.mult((-.9f) * speed);
+        travel.mult((-percent) * speed);
         pos.add(travel);
     }
 }

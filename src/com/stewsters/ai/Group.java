@@ -1,9 +1,11 @@
 package com.stewsters.ai;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.stewsters.Man;
 import com.stewsters.Order;
+import com.stewsters.World;
 import processing.core.PVector;
 
 /**
@@ -22,17 +24,20 @@ public class Group
         this.guys = guys;
         leaderId = guys.get(0).id;
 	}
-	
+
+    public Group()
+    {
+        this.guys = new ArrayList<Man>();
+        leaderId = 0;
+    }
+
 	/*
 	 * This man joins the group.
 	 */
 	public void join(Man m)
 	{
-
 		guys.add(m);
-
-        // first order is to join the main group (regroup)
-        m.order = new Order(getCenter());
+        m.group = this;
 
 	}
 	
@@ -44,9 +49,26 @@ public class Group
 	
 	public PVector getCenter()
 	{
-		//find the leader
-        return new PVector();
+        return getLeader().pos;
 	}
 	
-	
+
+    public Man getLeader(){
+
+        if(leaderId != 0){
+
+            Man leader = World.dudes.get(leaderId);
+            if(leader != null && leader.life >0){
+                return leader;
+            }
+        }
+
+        return promoteLeader();
+    }
+
+    private Man promoteLeader(){
+        Man newLeader = guys.get(0);
+        leaderId = newLeader.id;
+        return newLeader;
+    }
 }
