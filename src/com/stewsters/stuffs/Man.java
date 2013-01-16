@@ -1,5 +1,7 @@
-package com.stewsters;
+package com.stewsters.stuffs;
 
+import com.stewsters.World;
+import com.stewsters.ai.Anima;
 import com.stewsters.ai.Faction;
 import com.stewsters.ai.Group;
 import processing.core.PApplet;
@@ -17,24 +19,26 @@ public class Man {
 
     public int girth = 8;
     public int range = 16;
-    public Group group;
 
 
-    Man(Faction faction, PVector pos) {
+    public Anima anima;
+
+    public Man(Faction faction, PVector pos) {
         id = mancounter++;
 
         this.faction = faction;
         this.pos = pos;
+        this.anima = new Anima(this);
     }
 
-    void display(PApplet context) {
+    public void display(PApplet context) {
         if (life < 1) {
             context.image(World.casualty, pos.x - girth, pos.y - girth);
         } else
             context.image(faction.image, pos.x - girth, pos.y - girth);
     }
 
-    void act() {
+    public void act() {
         if (life < 1) {
 //			c = c.darker();
             return;
@@ -63,45 +67,11 @@ public class Man {
 
             }
         }
-        Man groupLeader = null;
-        if (group != null) {
-            groupLeader = group.getLeader();
-        }
 
 
-        if (closest_friend != null) {
-            if (min_friend_distance < girth) {
-                flee(closest_friend,1f);
-            }
-        }
+        anima.react( closest_friend, min_friend_distance, closest_opponent, min_oppenent_distance);
 
-        // move toward him. If the distance is less than 1, attack
-        if (closest_opponent != null) {
-            if (min_oppenent_distance < girth) {
-                //back off of them
-                flee(closest_opponent,1f);
-            } else if (life < 5) {
-                if (min_oppenent_distance < 10) {
-                    flee(closest_opponent,0.6f);
-                } else {
-                    advance(groupLeader,0.6f);
-                }
-            } else if (min_oppenent_distance < range) {
-                // attack
-                closest_opponent.life -= 1;
-            } else {
-
-                //we are the leader, advance.
-                if (groupLeader == this) {
-                    advance(closest_opponent,.5f);
-                } else {
-                    //move toward the leader
-                    advance(groupLeader,1f);
-                }
-            }
-        }
-
-        //worldwrap
+        //worldwrap -  this can create some weird behavior, we should instead kill anyone who gets too far away.
         if (pos.x > World.x)
             pos.x -= World.x;
         else if (pos.x < 0)
@@ -113,14 +83,14 @@ public class Man {
             pos.y += World.y;
     }
 
-    private void advance(Man m,float percent) {
+    public void advance(Man m, float percent) {
         PVector travel = PVector.sub(m.pos, pos);
         travel.normalize();
         travel.mult(percent * speed);
         pos.add(travel);
     }
 
-    private void flee(Man m,float percent) {
+    public void flee(Man m, float percent) {
         PVector travel = PVector.sub(m.pos, pos);
         travel.normalize();
         travel.mult((-percent) * speed);

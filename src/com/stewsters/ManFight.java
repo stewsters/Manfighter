@@ -1,49 +1,68 @@
 package com.stewsters;
 
-import java.awt.Color;
-import java.util.LinkedHashMap;
-import java.util.Random;
-
 import com.stewsters.ai.Faction;
 import com.stewsters.ai.Group;
+import com.stewsters.stuffs.Man;
+import com.stewsters.stuffs.Obstacle;
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
+
+import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class ManFight extends PApplet {
 
     private static final long serialVersionUID = -6056361700394447127L;
 
+    PImage ground;
+
     public void setup() {
-        World.x = 1000;
-        World.y = 1000;
+        World.x = 512;
+        World.y = 512;
+
+        ground = createImage(World.x, World.y, RGB);
+        ground.loadPixels();
+        for (int i = 0; i < ground.pixels.length; i++) {
+            ground.pixels[i] = color(255, 255, 255);
+        }
+        ground.updatePixels();
+
 
         this.setSize(World.x, World.y);
-        this.scale(10);
+//        this.scale(10);
 
-        Faction.RED.image = loadImage("/home/bloodred/code/Manfighter/assets/red_fighter.png");
-        Faction.BLUE.image = loadImage("/home/bloodred/code/Manfighter/assets/blue_fighter.png");
-        Faction.YELLOW.image = loadImage("/home/bloodred/code/Manfighter/assets/yellow_fighter.png");
-        World.casualty = loadImage("/home/bloodred/code/Manfighter/assets/casualty.png");
+        Faction.RED.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/red_fighter.png");
+        Faction.BLUE.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/blue_fighter.png");
+        Faction.YELLOW.image = loadImage("/home/bloodred/privatecode/Manfighter/assets/yellow_fighter.png");
+        World.casualty = loadImage("/home/bloodred/privatecode/Manfighter/assets/casualty.png");
+        World.tree = loadImage("/home/bloodred/privatecode/Manfighter/assets/tree.png");
 
         // smooth();
         World.dudes = new LinkedHashMap<Integer, Man>();
+        World.obstacles = new LinkedHashMap<Integer, Obstacle>();
 
         Random r = new Random();
 
         Group blueGroup = new Group();
         Group yellowGroup = new Group();
 
-        for (int i = 0; i < 2000; i++) {
-            Faction faction;
+
+        for (int i = 0; i < 100; i++) {
+            Obstacle obstacle = new Obstacle(new PVector(r.nextInt(World.x), r.nextInt(World.y)));
+            World.obstacles.put(obstacle.id, obstacle);
+        }
+
+        for (int i = 0; i < 200; i++) {
             PVector starting;
             Man newMan;
             if (i % 2 == 0) {
-                starting = new PVector(r.nextInt(World.x / 4), r.nextInt(World.y));
+                starting = new PVector(r.nextInt(World.x / 4), r.nextInt(World.y / 2));
                 newMan = new Man(Faction.YELLOW, starting);
 
                 yellowGroup.join(newMan);
             } else {
-                starting = new PVector(r.nextInt(World.x / 4) + (3 * World.x / 4), r.nextInt(World.y));
+                starting = new PVector(r.nextInt(World.x / 4) + (3 * World.x / 4), r.nextInt(World.y / 2));
                 newMan = new Man(Faction.BLUE, starting);
                 blueGroup.join(newMan);
             }
@@ -51,11 +70,14 @@ public class ManFight extends PApplet {
             World.dudes.put(newMan.id, newMan);
 
         }
+
+
     }
 
     public void draw() {
 
-        background(0,128,0);
+        background(0, 128, 0);
+        image(ground, 0, 0);
         for (Man m : World.dudes.values()) {
             m.act();
         }
@@ -63,10 +85,9 @@ public class ManFight extends PApplet {
             m.display(this);
         }
 
+        for (Obstacle obstacle : World.obstacles.values()) {
+            obstacle.display(this);
+        }
     }
-    /*
-	 * if(mousePressed) { fill(0); } else { fill(255); } ellipse(mouseX, mouseY,
-	 * 80, 80); }
-	 */
 
 }
