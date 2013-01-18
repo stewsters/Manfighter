@@ -3,7 +3,6 @@ package com.stewsters.stuffs;
 import com.stewsters.World;
 import com.stewsters.ai.Anima;
 import com.stewsters.ai.Faction;
-import com.stewsters.ai.Group;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -15,13 +14,14 @@ public class Man {
     public int id;
 
     public int life = 10;
-    public int speed = 1;
+    public float speed = 5f;
 
-    public int girth = 8;
-    public int range = 16;
-
+    public float girth = 8f;
+    public float range = 14f;
+    public Float damage = 1f;
 
     public Anima anima;
+
 
     public Man(Faction faction, PVector pos) {
         id = mancounter++;
@@ -38,7 +38,7 @@ public class Man {
             context.image(faction.image, pos.x - girth, pos.y - girth);
     }
 
-    public void act() {
+    public void act(float deltaTime) {
         if (life < 1) {
 //			c = c.darker();
             return;
@@ -68,8 +68,14 @@ public class Man {
             }
         }
 
+        if (closest_friend != null && (min_friend_distance < girth)) {
+            flee(closest_friend, speed * deltaTime);
+        }else if (closest_opponent != null && min_oppenent_distance < girth) {
+            flee(closest_opponent, speed * deltaTime);
+        }else{
+            anima.react(deltaTime, closest_friend, min_friend_distance, closest_opponent, min_oppenent_distance);
+        }
 
-        anima.react( closest_friend, min_friend_distance, closest_opponent, min_oppenent_distance);
 
         //worldwrap -  this can create some weird behavior, we should instead kill anyone who gets too far away.
         if (pos.x > World.x)

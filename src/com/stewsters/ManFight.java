@@ -74,12 +74,23 @@ public class ManFight extends PApplet {
 
     }
 
+    Long lastNano = null;
+
     public void draw() {
+
+        if (lastNano == null) {
+            lastNano = System.nanoTime() - 1;
+        }
+
+        long thisNano = System.nanoTime();
+        long timePassed = thisNano - lastNano;
+        float deltaTime = timePassed / 1000000000f;
+        lastNano = thisNano;
 
         background(0, 128, 0);
         image(ground, 0, 0);
         for (Man m : World.dudes.values()) {
-            m.act();
+            m.act(deltaTime);
         }
         for (Man m : World.dudes.values()) {
             m.display(this);
@@ -88,6 +99,8 @@ public class ManFight extends PApplet {
         for (Obstacle obstacle : World.obstacles.values()) {
             obstacle.display(this);
         }
+
+
     }
 
 }
