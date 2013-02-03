@@ -9,6 +9,7 @@ import processing.core.PApplet;
 public class AnimationFSM {
 
     AnimationState currentState;
+    long timeAnimationStarted = 0;
 
     //variable for how long we have been in our current state,
     // needed for frames and limited time operations
@@ -17,6 +18,9 @@ public class AnimationFSM {
         currentState = AnimationState.STANDING;
     }
 
+    public void setState(AnimationState newState){
+	currentState = newState;
+    }
 
     /**
      * This controls how the state moves
@@ -57,7 +61,7 @@ public class AnimationFSM {
 
                     break;
                 case ROLLING:
-
+                    
                     break;
                 case ATTACK_THRUST:
 
