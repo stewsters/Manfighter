@@ -1,5 +1,6 @@
 package com.stewsters.animation;
 
+import com.stewsters.controls.ControllerState;
 import processing.core.PApplet;
 
 /**
@@ -9,7 +10,7 @@ import processing.core.PApplet;
 public class AnimationFSM {
 
     AnimationState currentState;
-    long timeAnimationStarted = 0;
+    float timeAnimationStarted = 0f; //time in seconds since this animation started
 
     //variable for how long we have been in our current state,
     // needed for frames and limited time operations
@@ -18,50 +19,44 @@ public class AnimationFSM {
         currentState = AnimationState.STANDING;
     }
 
-    public void setState(AnimationState newState){
-	currentState = newState;
+    // This will set the animation and clock for that animation
+    private void setState(AnimationState newState, float deltaTime) {
+        currentState = newState;
+        timeAnimationStarted = deltaTime;
     }
 
     /**
      * This controls how the state moves
      */
-    public void update() {
+    public void update(ControllerState c, float deltaTime) {
 
-
-        boolean move = false;
-        boolean attack = false;
-        boolean roll = false;
-
-        boolean lightHit = false;
-        boolean heavyHit = false;
-
-
-        if (heavyHit) {
+        if (c.heavyHit) {
             currentState = AnimationState.PRONE;
-        } else if (lightHit && currentState != AnimationState.PRONE) {
-            currentState = AnimationState.STUNNED;
+        } else if (c.lightHit && currentState != AnimationState.PRONE) {
+            setState(AnimationState.STUNNED, deltaTime);
         } else {
 
             switch (currentState) {
                 case STANDING:
 
-                    if(roll) currentState = AnimationState.ROLLING;
-
-                    if(move) currentState = AnimationState.WALKING;
-
-                    if(attack) currentState = AnimationState.ATTACK_SLASH;
+                    if (c.roll)
+                        setState(AnimationState.ROLLING, deltaTime);
+                    else if (c.attack)
+                        setState(AnimationState.ATTACK_SLASH, deltaTime);
+                    else if (c.move)
+                        setState(AnimationState.WALKING, deltaTime);
 
                     break;
                 case WALKING:
-                    if (attack) currentState = AnimationState.ATTACK_THRUST;
+                    if (c.attack) setState(AnimationState.ATTACK_THRUST, deltaTime);
 
-                    if (!move) currentState = AnimationState.STANDING;
+                    if (!c.move) setState(AnimationState.STANDING, deltaTime);
 
-                    if (roll) currentState = AnimationState.ROLLING;
+                    if (c.roll) setState(AnimationState.ROLLING, deltaTime);
 
                     break;
                 case ROLLING:
-                    
+
                     break;
                 case ATTACK_THRUST:
 
@@ -90,8 +85,9 @@ public class AnimationFSM {
     }
 
 
-    //we might want to pull this out
+    //we might want to pull this out, so we can render multiple types of Animation
     public void render(PApplet context) {
+
 
     }
 
