@@ -19,8 +19,6 @@ public class Player extends Man{
     @Override
     public void act(float deltaTime) {
 
-        //get controls updated.
-        c.update();
 
         //pass controls into animation
         animationFSM.update(c,deltaTime);

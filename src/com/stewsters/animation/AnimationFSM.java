@@ -1,6 +1,7 @@
 package com.stewsters.animation;
 
 import com.stewsters.controls.ControllerState;
+import com.stewsters.controls.MoveDirection;
 import processing.core.PApplet;
 
 /**
@@ -43,14 +44,14 @@ public class AnimationFSM {
                         setState(AnimationState.ROLLING, deltaTime);
                     else if (c.attack)
                         setState(AnimationState.ATTACK_SLASH, deltaTime);
-                    else if (c.move)
+                    else if (c.move != MoveDirection.none)
                         setState(AnimationState.WALKING, deltaTime);
 
                     break;
                 case WALKING:
                     if (c.attack) setState(AnimationState.ATTACK_THRUST, deltaTime);
 
-                    if (!c.move) setState(AnimationState.STANDING, deltaTime);
+                    if (c.move == MoveDirection.none) setState(AnimationState.STANDING, deltaTime);
 
                     if (c.roll) setState(AnimationState.ROLLING, deltaTime);
 

@@ -2,8 +2,10 @@ package com.stewsters;
 
 import com.stewsters.ai.Faction;
 import com.stewsters.ai.Group;
+import com.stewsters.controls.ControllerState;
 import com.stewsters.stuffs.Man;
 import com.stewsters.stuffs.Obstacle;
+import com.stewsters.stuffs.Player;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -14,9 +16,12 @@ import java.util.Random;
 public class ManFight extends PApplet {
 
     private static final long serialVersionUID = -6056361700394447127L;
+    private Long lastNano = null;
+    private PImage ground;
+    Player player;
+    ControllerState c;
 
-    PImage ground;
-
+    @Override
     public void setup() {
         World.x = 512;
         World.y = 512;
@@ -70,12 +75,23 @@ public class ManFight extends PApplet {
             World.dudes.put(newMan.id, newMan);
 
         }
-
+        c = new ControllerState();
+        player = new Player(Faction.RED, new PVector(World.x / 2, World.y / 2), c);
 
     }
 
-    Long lastNano = null;
+    //get controls updated.
+    @Override
+    public void keyPressed() {
+        c.push(key);
+    }
 
+    @Override
+    public void keyReleased(){
+        c.release(key);
+    }
+
+    @Override
     public void draw() {
 
         if (lastNano == null) {
@@ -99,7 +115,6 @@ public class ManFight extends PApplet {
         for (Obstacle obstacle : World.obstacles.values()) {
             obstacle.display(this);
         }
-
 
     }
 
