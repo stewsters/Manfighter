@@ -1,7 +1,7 @@
 package com.stewsters.animation;
 
 import com.stewsters.controls.ControllerState;
-import com.stewsters.controls.MoveDirection;
+import com.stewsters.controls.Direction;
 import processing.core.PApplet;
 
 /**
@@ -10,7 +10,8 @@ import processing.core.PApplet;
 
 public class AnimationFSM {
 
-    AnimationState currentState;
+    public Direction facing;
+    public AnimationState currentState;
     float timeAnimationStarted = 0f; //time in seconds since this animation started
 
     //variable for how long we have been in our current state,
@@ -18,6 +19,7 @@ public class AnimationFSM {
 
     public AnimationFSM() {
         currentState = AnimationState.STANDING;
+        facing = Direction.S;
     }
 
     // This will set the animation and clock for that animation
@@ -26,10 +28,15 @@ public class AnimationFSM {
         timeAnimationStarted = deltaTime;
     }
 
+
+
+
     /**
      * This controls how the state moves
      */
     public void update(ControllerState c, float deltaTime) {
+
+        System.out.println(c.move.name());
 
         if (c.heavyHit) {
             currentState = AnimationState.PRONE;
@@ -44,14 +51,14 @@ public class AnimationFSM {
                         setState(AnimationState.ROLLING, deltaTime);
                     else if (c.attack)
                         setState(AnimationState.ATTACK_SLASH, deltaTime);
-                    else if (c.move != MoveDirection.none)
+                    else if (c.move != Direction.none)
                         setState(AnimationState.WALKING, deltaTime);
 
                     break;
                 case WALKING:
                     if (c.attack) setState(AnimationState.ATTACK_THRUST, deltaTime);
 
-                    if (c.move == MoveDirection.none) setState(AnimationState.STANDING, deltaTime);
+                    if (c.move == Direction.none) setState(AnimationState.STANDING, deltaTime);
 
                     if (c.roll) setState(AnimationState.ROLLING, deltaTime);
 

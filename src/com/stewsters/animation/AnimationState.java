@@ -8,6 +8,5 @@ public enum AnimationState {
     ATTACK_SLASH,
     STUNNED,
     PRONE,
-    GETTINGUP
-
+    GETTINGUP;
 }

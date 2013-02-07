@@ -116,6 +116,9 @@ public class ManFight extends PApplet {
             obstacle.display(this);
         }
 
+        player.act(deltaTime);
+        player.display(this);
+
     }
 
 }

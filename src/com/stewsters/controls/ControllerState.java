@@ -8,7 +8,7 @@ public class ControllerState {
     public boolean heavyHit;
 
     public ControllerState() {
-        move = MoveDirection.none;
+        move = Direction.none;
         attack = false;
         roll = false;
 
@@ -20,16 +20,49 @@ public class ControllerState {
     /**
      * Everything below here has to do with movement
      */
-    public MoveDirection move;
+    public Direction move;
 
-    private boolean move_up = false;
-    private boolean move_right = false;
-    private boolean move_down = false;
-    private boolean move_left = false;
+    private boolean move_n = false;
+    private boolean move_e = false;
+    private boolean move_s = false;
+    private boolean move_w = false;
 
-    private void updateMove(){
+    private void setMoveDir(Direction direction, Boolean pushed){
+        switch (direction){
+            case N: move_n = pushed; break;
+            case E: move_e = pushed; break;
+            case S: move_s = pushed; break;
+            case W: move_w = pushed; break;
+        }
+    }
+
+
+    private void updatePushMove(Direction direction){
         //given current state of move, come up with a new desired movement
+        move = direction;
+        setMoveDir(direction,true);
+    }
 
+    private void updateReleaseMove(Direction direction){
+
+        if (direction == move){
+            setMoveDir(direction,false);
+
+            //see what is still pushed
+            if(move_n){
+                move = Direction.N;
+            }else if(move_e){
+                move = Direction.E;
+            }else if(move_s){
+                move = Direction.S;
+            }else if(move_w){
+                move = Direction.W;
+            }else
+                move = Direction.none;
+
+        }else{
+            setMoveDir(direction,false);
+        }
     }
 
     /**
@@ -38,10 +71,10 @@ public class ControllerState {
      */
     public void push(char key) {
         switch (key){
-            case('w'):case('W'):move_up = true ;break;
-            case('d'):case('D'):move_right = true ;break;
-            case('s'):case('S'):move_down = true ;break;
-            case('a'):case('A'):move_left = true ;break;
+            case('w'):case('W'):updatePushMove(Direction.N); break;
+            case('d'):case('D'):updatePushMove(Direction.E); break;
+            case('s'):case('S'):updatePushMove(Direction.S); break;
+            case('a'):case('A'):updatePushMove(Direction.W); break;
             case('k'):case('K'):attack = true ;break;
             case('l'):case('L'):roll = true ;break;
         }
@@ -50,10 +83,10 @@ public class ControllerState {
 
     public void release(char key) {
         switch (key){
-            case('w'):case('W'):move_up = false ;break;
-            case('d'):case('D'):move_right = false ;break;
-            case('s'):case('S'):move_down = false ;break;
-            case('a'):case('A'):move_left = false ;break;
+            case('w'):case('W'):updateReleaseMove(Direction.N); break;
+            case('d'):case('D'):updateReleaseMove(Direction.E); break;
+            case('s'):case('S'):updateReleaseMove(Direction.S); break;
+            case('a'):case('A'):updateReleaseMove(Direction.W); break;
             case('k'):case('K'):attack = false ;break;
             case('l'):case('L'):roll = false ;break;
         }
