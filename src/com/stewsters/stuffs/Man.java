@@ -14,7 +14,7 @@ public class Man {
     public int id;
 
     public int life = 10;
-    public float speed = 5f;
+    public float speed = 15f;
 
     public float girth = 8f;
     public float range = 14f;
@@ -89,17 +89,17 @@ public class Man {
             pos.y += World.y;
     }
 
-    public void advance(Man m, float percent) {
+    public void advance(Man m, float deltaTime) {
         PVector travel = PVector.sub(m.pos, pos);
         travel.normalize();
-        travel.mult(percent * speed);
+        travel.mult(deltaTime * speed);
         pos.add(travel);
     }
 
-    public void flee(Man m, float percent) {
+    public void flee(Man m, float deltaTime) {
         PVector travel = PVector.sub(m.pos, pos);
         travel.normalize();
-        travel.mult((-percent) * speed);
+        travel.mult(deltaTime * -speed);
         pos.add(travel);
     }
 }

@@ -29,14 +29,12 @@ public class AnimationFSM {
     }
 
 
-
-
     /**
      * This controls how the state moves
      */
     public void update(ControllerState c, float deltaTime) {
-
-        System.out.println(c.move.name());
+//
+//        System.out.println(c.move.name());
 
         if (c.heavyHit) {
             currentState = AnimationState.PRONE;
@@ -52,8 +50,10 @@ public class AnimationFSM {
                     else if (c.attack)
                         setState(AnimationState.ATTACK_SLASH, deltaTime);
                     else if (c.move != Direction.none)
+                    {
+                        facing = c.move;
                         setState(AnimationState.WALKING, deltaTime);
-
+                    }
                     break;
                 case WALKING:
                     if (c.attack) setState(AnimationState.ATTACK_THRUST, deltaTime);
@@ -80,7 +80,7 @@ public class AnimationFSM {
                     //time requirement
 
                     break;
-                case GETTINGUP:
+                case GETTING_UP:
                     //time requirement
 
                     break;

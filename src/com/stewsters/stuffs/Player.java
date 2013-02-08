@@ -21,22 +21,19 @@ public class Player extends Man{
     @Override
     public void act(float deltaTime) {
 
+        System.out.println(animationFSM.currentState.name() + " " + animationFSM.facing.name());
+
         //pass controls into animation
         animationFSM.update(c,deltaTime);
 
         //take the animationState for the character.  This is used to generate movement
         if(animationFSM.currentState == AnimationState.WALKING){
-            switch (animationFSM.facing){
-                case N: ; break;
-                case E: ; break;
-                case S: ; break;
-                case W: ; break;
-            }
+            move(animationFSM.facing,deltaTime);
         }
 
     }
-    private void move(float x, float y, float deltaTime){
-        PVector travel = PVector.sub(new PVector(x,y), pos); //todo: this could be static, or from the direction
+    private void move(Direction d, float deltaTime){
+        PVector travel = d.unitVector.get();
         travel.normalize();
         travel.mult(deltaTime * speed);
         pos.add(travel);

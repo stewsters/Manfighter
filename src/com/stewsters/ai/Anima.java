@@ -29,12 +29,12 @@ public class Anima {
         if (closest_opponent != null) {
 
             if (min_oppenent_distance < body.range) {
-                closest_opponent.life -= (body.damage *deltaTime); // attack
+                closest_opponent.life -= body.damage*(deltaTime); // attack
             } else if (body.life < injuredLife) {
                 if (min_oppenent_distance < safeDistance) {
-                    body.flee(closest_opponent, body.speed * deltaTime);
+                    body.flee(closest_opponent,  deltaTime);
                 } else {
-                    body.advance(groupLeader, body.speed * deltaTime);
+                    body.advance(groupLeader,  deltaTime);
                 }
             } else {
 
@@ -43,10 +43,10 @@ public class Anima {
                 //we are the leader, advance.
                 if (groupLeader == body) {
                     //hold
-                    body.advance(closest_opponent, body.speed * deltaTime / 2);
+                    body.advance(closest_opponent,  deltaTime / 2);
                 } else if(groupLeader.pos.dist(body.pos) > spacing){
                     //move toward the leader
-                    body.advance(groupLeader, body.speed * deltaTime);
+                    body.advance(groupLeader, deltaTime);
                 }
             }
         }
